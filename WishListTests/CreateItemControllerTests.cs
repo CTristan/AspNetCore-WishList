@@ -15,7 +15,6 @@ namespace WishListTests
         {
             // Get appropriate path to file for the current operating system
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Controllers" + Path.DirectorySeparatorChar + "ItemController.cs";
-
             // Assert Index.cshtml is in the Views/Home folder
             Assert.True(File.Exists(filePath), "`ItemController.cs` was not found in the `Controllers` folder.");
 
@@ -47,12 +46,40 @@ namespace WishListTests
             Assert.True(rgx.IsMatch(file), "`ItemController`'s constructor did not set the `_context` property to the provided `ApplicationDbContext` parameter.");
         }
 
+        [Fact(DisplayName = "Create Item Index Action @create-item-index-action")]
+        public void CreateItemIndexActionTest()
+        {
+            // Get appropriate path to file for the current operating system
+            var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Controllers" + Path.DirectorySeparatorChar + "ItemController.cs";
+            // Assert Index.cshtml is in the Views/Home folder
+            Assert.True(File.Exists(filePath), "`ItemController.cs` was not found in the `Controllers` folder.");
+
+            var controllerType = TestHelpers.GetUserType("WishList.Controllers.ItemController");
+
+            Assert.True(controllerType != null, "`ItemController.cs` was found, but it appears it does not contain a `public` class `ItemController`.");
+
+            // Verify Index Action Exists
+            var method = controllerType.GetMethod("Index");
+            Assert.True(method != null, "`ItemController` was found, but does not appear to contain an action `Index` with a return type of `IActionResult`.");
+
+            // Verify Index has the correct return type
+            Assert.True(method.ReturnType == typeof(IActionResult), "`ItemController`'s `Index` action was found, but didn't have a return type of `IActionResult`.");
+
+            string file;
+            using (var streamReader = new StreamReader(filePath))
+            {
+                file = streamReader.ReadToEnd();
+            }
+            var pattern = @"public\s*IActionResult\s*Index\s*?[(]\s*?[)]\s*?{\s*?((var|List<Item>).*=\s*?_context.Items(;\s*?return\s*View[(](""Index"",)?.*[.]ToList[(]\s*?[)]\s*?[)];|[.]ToList[(]\s*?[)]\s*?;\s*?return\s*View\s*?[(]\s*?(""Index"",)?.*[)];)|return\s*View\s*?[(]\s*?(""Index"",)?\s*?_context[.]Items[.]ToList[(]\s*?[)]\s*?[)]\s*?[;])\s*?}";
+            var rgx = new Regex(pattern);
+            Assert.True(rgx.IsMatch(file), "`ItemController`'s `Index` action does not appear to be getting all `Item`s from `_context.Items` converting it to type `List<Item>` and returning it as the model for the 'Index' view.");
+        }
+
         [Fact(DisplayName = "Create Item Create HttpGet Action @create-item-create-httpget-action")]
         public void CreateItemCreateHttpGetActionTest()
         {
             // Get appropriate path to file for the current operating system
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Controllers" + Path.DirectorySeparatorChar + "ItemController.cs";
-
             // Assert Index.cshtml is in the Views/Home folder
             Assert.True(File.Exists(filePath), "`ItemController.cs` was not found in the `Controllers` folder.");
 
@@ -86,7 +113,6 @@ namespace WishListTests
         {
             // Get appropriate path to file for the current operating system
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Controllers" + Path.DirectorySeparatorChar + "ItemController.cs";
-
             // Assert Index.cshtml is in the Views/Home folder
             Assert.True(File.Exists(filePath), "`ItemController.cs` was not found in the `Controllers` folder.");
 
@@ -124,7 +150,6 @@ namespace WishListTests
         {
             // Get appropriate path to file for the current operating system
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Controllers" + Path.DirectorySeparatorChar + "ItemController.cs";
-
             // Assert Index.cshtml is in the Views/Home folder
             Assert.True(File.Exists(filePath), "`ItemController.cs` was not found in the `Controllers` folder.");
 
@@ -153,36 +178,6 @@ namespace WishListTests
             var pattern = @"public\s*IActionResult\s*Delete\s*?[(]\s*?int\s*id\s*?[)]\s*?{\s*?.*_context.Items.FirstOrDefault[(].*[.]Id\s*?==\s*?id\s*?[)];\s*?_context([.]Items)?[.]Remove[(]\s*?.*\s*?[)];\s*?_context[.]SaveChanges[(]\s*?[)];\s*?return\s*RedirectToAction[(]""Index""(,\s*?""Item"")?[)];\s*?}";
             var rgx = new Regex(pattern);
             Assert.True(rgx.IsMatch(file), "`ItemController`'s `Delete` action does not appear to be removing the `Item` with the matching `Id` to the one provided from `_context.Items`, `SaveChanges`, and then redirecting to the `Item`'s `Index` action.");
-        }
-
-        [Fact(DisplayName = "Create Item Index Action @create-item-index-action")]
-        public void CreateItemIndexActionTest()
-        {
-            // Get appropriate path to file for the current operating system
-            var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Controllers" + Path.DirectorySeparatorChar + "ItemController.cs";
-
-            // Assert Index.cshtml is in the Views/Home folder
-            Assert.True(File.Exists(filePath), "`ItemController.cs` was not found in the `Controllers` folder.");
-
-            var controllerType = TestHelpers.GetUserType("WishList.Controllers.ItemController");
-
-            Assert.True(controllerType != null, "`ItemController.cs` was found, but it appears it does not contain a `public` class `ItemController`.");
-
-            // Verify Index Action Exists
-            var method = controllerType.GetMethod("Index");
-            Assert.True(method != null, "`ItemController` was found, but does not appear to contain an action `Index` with a return type of `IActionResult`.");
-
-            // Verify Index has the correct return type
-            Assert.True(method.ReturnType == typeof(IActionResult), "`ItemController`'s `Index` action was found, but didn't have a return type of `IActionResult`.");
-
-            string file;
-            using (var streamReader = new StreamReader(filePath))
-            {
-                file = streamReader.ReadToEnd();
-            }
-            var pattern = @"public\s*IActionResult\s*Index\s*?[(]\s*?[)]\s*?{\s*?((var|List<Item>).*=\s*?_context.Items(;\s*?return\s*View[(](""Index"",)?.*[.]ToList[(]\s*?[)]\s*?[)];|[.]ToList[(]\s*?[)]\s*?;\s*?return\s*View\s*?[(]\s*?(""Index"",)?.*[)];)|return\s*View\s*?[(]\s*?(""Index"",)?\s*?_context[.]Items[.]ToList[(]\s*?[)]\s*?[)]\s*?[;])\s*?}";
-            var rgx = new Regex(pattern);
-            Assert.True(rgx.IsMatch(file), "`ItemController`'s `Index` action does not appear to be getting all `Item`s from `_context.Items` converting it to type `List<Item>` and returning it as the model for the 'Index' view.");
         }
     }
 }

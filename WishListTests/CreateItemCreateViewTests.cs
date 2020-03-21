@@ -11,7 +11,6 @@ namespace WishListTests
         {
             // Get appropriate path to file for the current operating system
             var filePath = ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + ".." + Path.DirectorySeparatorChar + "WishList" + Path.DirectorySeparatorChar + "Views" + Path.DirectorySeparatorChar + "Item" + Path.DirectorySeparatorChar + "Create.cshtml";
-
             // Assert Index.cshtml is in the Views/Home folder
             Assert.True(File.Exists(filePath), "`Create.cshtml` was not found in the `Views" + Path.DirectorySeparatorChar + "Item` folder.");
 
