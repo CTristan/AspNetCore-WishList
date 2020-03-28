@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WishList.Models;
 
 namespace WishList.Data
 {
@@ -7,5 +8,7 @@ namespace WishList.Data
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
         }
+
+        public DbSet<Item> Items { get; set; }
     }
 }
