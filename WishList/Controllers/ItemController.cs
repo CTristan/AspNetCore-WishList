@@ -13,6 +13,12 @@ namespace WishList.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View("Create");
+        }
+
         public IActionResult Index()
         {
             return View("Index", _context.Items.ToList());
