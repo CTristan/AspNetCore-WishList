@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using WishList.Data;
 
 namespace WishList.Controllers
@@ -14,7 +15,7 @@ namespace WishList.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View("Index", _context.Items.ToList());
         }
     }
 }
